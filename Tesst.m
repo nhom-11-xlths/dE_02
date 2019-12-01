@@ -1,23 +1,51 @@
+% Input :
+% Tin hieu lien tuc x[n]
+% Ham cua so w[m] : Cua so hanning
+% step : buoc nhay cua cua so window
+% NFFT : so diem lay fft
+% fs : tan so lay mau
+%
+% OUTPUT :
+% 
+%
+%
+%
+
 [x, fs] = audioread('a.wav');
 N = length(x);
-w = hamming(1024);
-w_length = length(w);
-step = w_length/4;
-K = fix((N-w_length + step)/step);
-%k = fix( N/w_length);
-N2 = 4096/2 + 1;
-N3 = ceil((1+4096)/2);
-time = (1:w_length)';
-S=zeros(N2,K); 
+L = 2048;
+w = hamming(L);
+step = L/4;
+K = fix((N-L + step)/step);
 NFFT = 4096;
-t = x(time);
+N2 = NFFT/2 + 1;
+S=zeros(K,N2); 
 for k=0:K-1
-    xw=x(1+k*step:w_length+k*step).*w; 
+    xw=x(1+k*step:L+k*step).*w; 
     X=fft(xw,NFFT); 
-    X1=X(1:N2); 
-    %S(k,1:N2)=X1.*conj(X1); 
-    S(:,1+k) = X(1:N2);
+    X1=X(1:N2)'; 
+    S(k+1,1:N2)=X1.*conj(X1); 
 end
+S=(S)';
+S=S/max(max(S));
+
+tk=(0:K-1)'*step/fs;
+F=(0:NFFT/2)'*fs/NFFT;
+
+
+figure(1)
+surf(tk, F, S)
+shading interp
+axis tight
+view(0, 90)
+set(gca, 'FontName', 'Times New Roman', 'FontSize', 14)
+xlabel('Time, s')
+ylabel('Frequency, Hz')
+title('Amplitude spectrogram of the signal')
+hcol = colorbar;
+set(hcol, 'FontName', 'Times New Roman', 'FontSize', 14)
+ylabel(hcol, 'Magnitude, dB')
+
 
 
 
