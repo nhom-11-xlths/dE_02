@@ -1,6 +1,6 @@
 clear, clc, close all
 % load an audio file
-[x, fs] = audioread('aeiuo_lon_data.wav'); 
+[x, fs] = audioread('amto.wav'); 
 % Tham sô dau vào
 L = 256; % Chieu dai cua so
 step = L/4; % Buoc nhay giua cac cua so
