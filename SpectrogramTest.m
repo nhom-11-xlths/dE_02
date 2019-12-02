@@ -1,15 +1,30 @@
 clear, clc, close all
 % load an audio file
-[x, fs] = audioread('a.wav'); 
-% Tham sô ??u vào
-L = 2048; % Chi?u dài c?a s?
-step = L/4; % B??c nh?y gi?a các c?a s?
-NFFT = 4096;% S? ?i?m l?y FFT
+[x, fs] = audioread('aeiuo_lon_data.wav'); 
+% Tham sô dau vào
+L = 256; % Chieu dai cua so
+step = L/4; % Buoc nhay giua cac cua so
+NFFT = 2048;% So diem lay FFT
 win = hanning(L);
 [S, f, t] = stft(x,win,step,NFFT,fs);
-S=fliplr(S)';
-S=S/max(max(S));
-colormap(1-gray);  colormap(jet);
-imagesc(t,flipud(f),20*log10(S),[-100 0]); axis xy
+
+S=(S)';
+S=S/max(max(S)); % Chuan hoa bien do
+S = 20*log10(S);
+
+figure(1)
+surf(t, f, S)
+shading interp
+axis tight
+view(0, 90)
+set(gca, 'FontName', 'Times New Roman', 'FontSize', 14)
+xlabel('Thoi gian, s')
+ylabel('Tan so, Hz')
+title('Pho bien do cua tin hieu')
+hcol = colorbar;
+set(hcol, 'FontName', 'Times New Roman', 'FontSize', 14)
+ylabel(hcol, 'Cuong do am, dB')
+
+
 
 

@@ -23,18 +23,15 @@ S=zeros(K,N2);
 for k=0:K-1
     xw=x(1+k*step:L+k*step).*w; 
     X=fft(xw,NFFT); 
-    X1=X(1:N2)'; 
-    S(k+1,1:N2)=X1.*conj(X1); 
+    X1=X(1:N2); 
+    S(k+1,1:N2)=X1; 
 end
-S=(S)';
-S=S/max(max(S));
-
-tk=(0:K-1)'*step/fs;
-F=(0:NFFT/2)'*fs/NFFT;
-
+A = abs(S');
+w = (0:NFFT/2).*fs/NFFT;
+t = (0:K-1).*step/NFFT;
 
 figure(1)
-surf(tk, F, S)
+surf(t, w, A)
 shading interp
 axis tight
 view(0, 90)
@@ -45,7 +42,6 @@ title('Amplitude spectrogram of the signal')
 hcol = colorbar;
 set(hcol, 'FontName', 'Times New Roman', 'FontSize', 14)
 ylabel(hcol, 'Magnitude, dB')
-
 
 
 
